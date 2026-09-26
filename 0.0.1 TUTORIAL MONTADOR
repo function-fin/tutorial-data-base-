@@ -1,0 +1,132 @@
+local Players = game:GetService("Players")
+local CoreGui = game:GetService("CoreGui")
+
+-- Define o local correto para renderizar a UI
+local parentUI = (gethui and gethui()) or CoreGui or Players.LocalPlayer:WaitForChild("PlayerGui")
+
+-- Remove a interface anterior se ja existir
+if parentUI:FindFirstChild("GuiaPropCollectorUI") then
+    parentUI.GuiaPropCollectorUI:Destroy()
+end
+
+-- Criar ScreenGui principal
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "GuiaPropCollectorUI"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = parentUI
+
+-- Janela Principal
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(0, 340, 0, 320)
+mainFrame.Position = UDim2.new(0.5, -170, 0.5, -160)
+mainFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+mainFrame.BorderSizePixel = 0
+mainFrame.Parent = screenGui
+
+-- Borda Branca da Janela Principal
+local frameStroke = Instance.new("UIStroke")
+frameStroke.Color = Color3.fromRGB(255, 255, 255)
+frameStroke.Thickness = 3
+frameStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+frameStroke.Parent = mainFrame
+
+-- Margens internas
+local padding = Instance.new("UIPadding")
+padding.PaddingTop = UDim.new(0, 10)
+padding.PaddingBottom = UDim.new(0, 10)
+padding.PaddingLeft = UDim.new(0, 12)
+padding.PaddingRight = UDim.new(0, 12)
+padding.Parent = mainFrame
+
+-- 1. TÍTULO (Fixo no Topo)
+local titleLabel = Instance.new("TextLabel")
+titleLabel.Size = UDim2.new(1, 0, 0, 25)
+titleLabel.Position = UDim2.new(0, 0, 0, 0)
+titleLabel.BackgroundTransparency = 1
+titleLabel.Text = "COMO UTILIZAR A FERRAMENTA"
+titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextSize = 15
+titleLabel.Font = Enum.Font.Arcade
+titleLabel.Parent = mainFrame
+
+-- 2. ÁREA ROLÁVEL (ScrollingFrame para os textos)
+local scrollFrame = Instance.new("ScrollingFrame")
+scrollFrame.Size = UDim2.new(1, 0, 1, -75) -- Espaço para título e botão
+scrollFrame.Position = UDim2.new(0, 0, 0, 30)
+scrollFrame.BackgroundTransparency = 1
+scrollFrame.BorderSizePixel = 0
+scrollFrame.ScrollBarThickness = 4
+scrollFrame.ScrollBarImageColor3 = Color3.fromRGB(255, 255, 255)
+scrollFrame.CanvasSize = UDim2.new(0, 0, 0, 0)
+scrollFrame.AutomaticCanvasSize = Enum.AutomaticSize.Y
+scrollFrame.Parent = mainFrame
+
+local scrollLayout = Instance.new("UIListLayout")
+scrollLayout.SortOrder = Enum.SortOrder.LayoutOrder
+scrollLayout.Padding = UDim.new(0, 8)
+scrollLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+scrollLayout.Parent = scrollFrame
+
+-- Função auxiliar para criar blocos de texto
+local function createLabel(text, size, alignment, order, color)
+    local label = Instance.new("TextLabel")
+    label.Size = UDim2.new(1, -8, 0, 0)
+    label.AutomaticSize = Enum.AutomaticSize.Y
+    label.BackgroundTransparency = 1
+    label.Text = text
+    label.TextColor3 = color or Color3.fromRGB(255, 255, 255)
+    label.TextSize = size
+    label.Font = Enum.Font.Arcade
+    label.TextWrapped = true
+    label.TextXAlignment = alignment
+    label.LayoutOrder = order
+    label.Parent = scrollFrame
+    return label
+end
+
+-- --- INSERINDO INFORMAÇÕES DO PASSO A PASSO ---
+createLabel("Passo 1 | Monte a estrutura normalmente no mapa, posicionando todos os Props manualmente.", 13, Enum.TextXAlignment.Left, 1)
+
+createLabel("Passo 2 | Vá para o ponto que será o referencial da estrutura e permaneça completamente imóvel.", 13, Enum.TextXAlignment.Left, 2)
+
+createLabel("Passo 3 | Execute o Data Base Collector Prop e ative a função INVOKE. Esse modo cria uma Tool artificial que permite selecionar cada Prop por clique.", 13, Enum.TextXAlignment.Left, 3)
+
+createLabel("Passo 4 | Clique em todos os Props da estrutura. O coletor registra automaticamente o nome do Prop, posição relativa, rotação completa, cor e demais propriedades.", 13, Enum.TextXAlignment.Left, 4)
+
+createLabel("Passo 5 | Ao finalizar a coleta, pressione COPY para copiar toda a base de dados.", 13, Enum.TextXAlignment.Left, 5)
+
+createLabel("Passo 6 | Abra o MONTADOR pelo ícone de pasta, cole as informações, clique em Transformar em Execução e depois em Executar.", 13, Enum.TextXAlignment.Left, 6)
+
+-- --- SEÇÃO AVISO IMPORTANTE ---
+createLabel("----------------------------------", 12, Enum.TextXAlignment.Center, 7)
+createLabel("AVISO IMPORTANTE", 15, Enum.TextXAlignment.Center, 8)
+createLabel("----------------------------------", 12, Enum.TextXAlignment.Center, 9)
+
+createLabel("O script PROP funciona com base em um sistema por referencial.", 13, Enum.TextXAlignment.Left, 10)
+
+createLabel("Esse script funciona com referencial de posição. Isso significa que o INVOKE não salva apenas as coordenadas absolutas dos Props: ele calcula a estrutura inteira em relação à posição do jogador no momento da coleta.", 13, Enum.TextXAlignment.Left, 11)
+
+createLabel("Na prática, o local onde você fica parado se torna a raiz (origem) da estrutura. Por isso, para o sistema funcionar com máxima precisão, NÃO SE MOVA durante o mapeamento. Assim, quando a execução for utilizada, a estrutura será reconstruída seguindo esse mesmo referencial em relação a você.", 13, Enum.TextXAlignment.Left, 12)
+
+-- 3. BOTÃO FECHAR UI (Fixo no Rodapé)
+local closeBtn = Instance.new("TextButton")
+closeBtn.Size = UDim2.new(0, 130, 0, 32)
+closeBtn.Position = UDim2.new(0.5, -65, 1, -32)
+closeBtn.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+closeBtn.Text = "ENTENDI"
+closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+closeBtn.Font = Enum.Font.Arcade
+closeBtn.TextSize = 16
+closeBtn.Parent = mainFrame
+
+-- Borda da caixa do Botão
+local btnStroke = Instance.new("UIStroke")
+btnStroke.Color = Color3.fromRGB(255, 255, 255)
+btnStroke.Thickness = 2
+btnStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+btnStroke.Parent = closeBtn
+
+-- Ação para fechar a interface
+closeBtn.MouseButton1Click:Connect(function()
+    screenGui:Destroy()
+end)
