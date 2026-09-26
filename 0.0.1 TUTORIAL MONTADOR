@@ -13,7 +13,7 @@ end
 local screenGui = Instance.new("ScreenGui")
 screenGui.Name = "GuiaPropCollectorUI"
 screenGui.ResetOnSpawn = false
-screenGui.DisplayOrder = 2 -- Definido DisplayOrder para 1
+screenGui.DisplayOrder = 20 -- Modificado para 20 (Ficará ACIMA do Data Base Coletor)
 screenGui.Parent = parentUI
 
 -- Janela Principal
